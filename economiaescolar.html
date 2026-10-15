@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprendemos a Economizar</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('fondo.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            width: 90%;
+            max-width: 580px;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            color: #0f4c81;
+            font-size: 24px;
+            margin-top: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        p {
+            font-size: 15px;
+            color: #475569;
+        }
+        .intro-characters {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .intro-characters img {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
+        }
+        .btn {
+            background: linear-gradient(135deg, #0f4c81, #1b6ca8);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.2s;
+            box-shadow: 0 4px 10px rgba(15, 76, 129, 0.3);
+            margin-top: 15px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #1b6ca8, #2389d7);
+        }
+        .char-selection {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .char-card {
+            border: 3px solid #cbd5e1;
+            border-radius: 15px;
+            padding: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #fff;
+        }
+        .char-card:hover {
+            border-color: #0f4c81;
+            transform: scale(1.05);
+        }
+        .char-card img {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+        }
+        /* Estilo para la pantalla de niveles tipo tablero */
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .level-btn {
+            background: #2e7d32;
+            color: white;
+            border: 3px solid #1b5e20;
+            border-radius: 12px;
+            padding: 12px 0;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .level-btn:hover:not(:disabled) {
+            background: #388e3c;
+            transform: scale(1.05);
+        }
+        .level-btn:disabled {
+            background: #cbd5e1;
+            border-color: #94a3b8;
+            cursor: not-allowed;
+        }
+        /* Contenedor de selección rápida de dinero (0.50 a 5 soles) */
+        .money-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        .money-btn {
+            background: #f1f5f9;
+            color: #0f4c81;
+            border: 2px solid #0f4c81;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .money-btn:hover {
+            background: #0f4c81;
+            color: white;
+        }
+        input[type="number"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            width: 50%;
+            text-align: center;
+        }
+        .stats-box {
+            background: #f0f4f8;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            font-weight: bold;
+            color: #1e293b;
+            font-size: 14px;
+        }
+        .feedback-box {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 10px;
+            margin: 15px 0;
+            text-align: left;
+            border-radius: 0 8px 8px 0;
+            color: #1e3a8a;
+            font-size: 14px;
+        }
+        .character-growth {
+            margin: 10px 0;
+            transition: transform 0.3s ease;
+        }
+        .character-growth img {
+            object-fit: contain;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- PANTALLA 1: INTRODUCCIÓN -->
+        <div id="screen-intro">
+            <h1>aprendemos a economizar</h1>
+            <div class="intro-characters">
+                <img src="goku.png" alt="Goku">
+                <img src="hello kitty.png" alt="Hello Kitty">
+            </div>
+            <p>¡Supera los 10 niveles de ahorro, haz crecer a tu personaje y conviértete en un experto financiero!</p>
+            <button class="btn" onclick="irASeleccion()">¡Comenzar!</button>
+        </div>
+
+        <!-- PANTALLA 2: SELECCIÓN DE PERSONAJE -->
+        <div id="screen-character" class="hidden">
+            <h1>Elige tu compañero</h1>
+            <p>Selecciona con quién deseas realizar esta aventura de ahorro:</p>
+            <div class="char-selection">
+                <div class="char-card" onclick="elegirPersonaje('Goku', 'goku.png')">
+                    <img src="goku.png" alt="Goku">
+                    <h3>Goku</h3>
+                </div>
+                <div class="char-card" onclick="elegirPersonaje('Hello Kitty', 'hello kitty.png')">
+                    <img src="hello kitty.png" alt="Hello Kitty">
+                    <h3>Hello Kitty</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANTALLA 3: MAPA DE NIVELES (1 al 10) -->
+        <div id="screen-levels" class="hidden">
+            <h1>Selecciona tu Nivel</h1>
+            <p>Elige el día que deseas registrar:</p>
+            <div class="levels-grid" id="levels-container">
+                <!-- Generado por JavaScript -->
+            </div>
+            <div class="stats-box">
+                Ahorro Acumulado Total: <span id="map-total-savings">S/ 0.00</span>
+            </div>
+        </div>
+
+        <!-- PANTALLA 4: REGISTRO DE AHORRO DEL DÍA (NIVEL) -->
+        <div id="screen-game" class="hidden">
+            <h1 id="level-title">Nivel 1</h1>
+            <div class="stats-box">
+                Compañero: <span id="player-info"></span> | Total Acumulado: <span id="game-total-savings">S/ 0.00</span>
+            </div>
+            
+            <!-- Personaje creciendo según el nivel -->
+            <div class="character-growth" id="char-container">
+                <img id="char-img" src="" alt="Personaje" style="width: 80px; height: 80px;">
+            </div>
+
+            <p id="level-prompt">Selecciona o escribe cuánto deseas ahorrar hoy:</p>
+            
+            <!-- Botones de selección rápida (0.50 a 5 soles) -->
+            <div class="money-options">
+                <button class="money-btn" onclick="seleccionarMontoRapido(0.50)">S/ 0.50</button>
+                <button class="money-btn" onclick="seleccionarMontoRapido(1.00)">S/ 1.00</button>
+                <button class="money-btn" onclick="seleccionarMontoRapido(2.00)">S/ 2.00</button>
+                <button class="money-btn" onclick="seleccionarMontoRapido(3.00)">S/ 3.00</button>
+                <button class="money-btn" onclick="seleccionarMontoRapido(5.00)">S/ 5.00</button>
+            </div>
+
+            <div>
+                <input type="number" id="daily-amount" placeholder="0.00" step="0.50" min="0">
+            </div>
+
+            <!-- Caja de Recomendación / Felicitación (inicialmente oculta) -->
+            <div id="feedback-box" class="feedback-box hidden"></div>
+
+            <div>
+                <button class="btn" id="action-btn" onclick="procesarAccion()">Finalizar por hoy</button>
+            </div>
+        </div>
+
+        <!-- PANTALLA 5: RESULTADO FINAL -->
+        <div id="screen-end" class="hidden">
+            <h1>🎉 ¡Reto Completado con Éxito! 🎉</h1>
+            <p id="final-message">Has superado los 10 niveles de ahorro.</p>
+            <button class="btn" onclick="reiniciarJuego()">Volver a Jugar</button>
+        </div>
+
+    </div>
+
+    <script>
+        let personajeElegido = "";
+        let imagenPersonaje = "";
+        let ahorrosPorNivel = {}; // Guarda el ahorro de cada nivel (1 al 10)
+        let nivelActualEnProceso = 1;
+        let estadoFeedbackMostrado = false;
+
+        function irASeleccion() {
+            document.getElementById("screen-intro").classList.add("hidden");
+            document.getElementById("screen-character").classList.remove("hidden");
+        }
+
+        function elegirPersonaje(nombre, img) {
+            personajeElegido = nombre;
+            imagenPersonaje = img;
+            document.getElementById("screen-character").classList.add("hidden");
+            document.getElementById("screen-levels").classList.remove("hidden");
+            
+            document.getElementById("player-info").innerText = personajeElegido;
+            construirMapaNiveles();
+            actualizarTotalMapa();
+        }
+
+        function construirMapaNiveles() {
+            let container = document.getElementById("levels-container");
+            container.innerHTML = "";
+            
+            for (let i = 1; i <= 10; i++) {
+                let btn = document.createElement("button");
+                btn.className = "level-btn";
+                btn.innerText = i;
+                
+                // Si ya completó este nivel, se marca distinto o se puede re-visitar
+                if (ahorrosPorNivel[i] !== undefined) {
+                    btn.style.background = "#1b5e20"; // Verde oscuro completado
+                }
+                
+                btn.onclick = () => abrirNivel(i);
+                container.appendChild(btn);
+            }
+        }
+
+        function actualizarTotalMapa() {
+            let suma = 0;
+            for (let k in ahorrosPorNivel) {
+                suma += ahorrosPorNivel[k];
+            }
+            document.getElementById("map-total-savings").innerText = `S/ ${suma.toFixed(2)}`;
+            
+            // Si completó los 10 niveles, mostrar pantalla final
+            if (Object.keys(ahorrosPorNivel).length === 10) {
+                setTimeout(() => {
+                    document.getElementById("screen-levels").classList.add("hidden");
+                    document.getElementById("screen-end").classList.remove("hidden");
+                    document.getElementById("final-message").innerHTML = `¡Increíble trabajo! Junto a <b>${personajeElegido}</b> lograste superar los 10 niveles y ahorraste un total acumulado de <br><h2 style="color:#0f4c81; margin:10px 0;">S/ ${suma.toFixed(2)}</h2>. ¡Tu alcancía está a otro nivel!`;
+                }, 500);
+            }
+        }
+
+        function abrirNivel(nivel) {
+            nivelActualEnProceso = nivel;
+            estadoFeedbackMostrado = false;
+            
+            document.getElementById("screen-levels").classList.add("hidden");
+            document.getElementById("screen-game").classList.remove("hidden");
+            
+            document.getElementById("level-title").innerText = `Nivel ${nivel} (Día ${nivel})`;
+            
+            let sumaActual = 0;
+            for (let k in ahorrosPorNivel) {
+                sumaActual += ahorrosPorNivel[k];
+            }
+            document.getElementById("game-total-savings").innerText = `S/ ${sumaActual.toFixed(2)}`;
+            
+            // Cargar valor previo si ya lo había guardado
+            let input = document.getElementById("daily-amount");
+            input.value = ahorrosPorNivel[nivel] !== undefined ? ahorrosPorNivel[nivel] : "";
+            input.disabled = false;
+
+            // Hacer crecer al personaje según el nivel (a mayor nivel, mayor tamaño de imagen de 80px a 140px)
+            let imgElem = document.getElementById("char-img");
+            imgElem.src = imagenPersonaje;
+            let tamañoPx = 80 + (nivel * 6); // Crece progresivamente
+            imgElem.style.width = `${tamañoPx}px`;
+            imgElem.style.height = `${tamañoPx}px`;
+
+            document.getElementById("feedback-box").classList.add("hidden");
+            document.getElementById("action-btn").innerText = "Finalizar por hoy";
+        }
+
+        function seleccionarMontoRapido(monto) {
+            document.getElementById("daily-amount").value = monto.toFixed(2);
+        }
+
+        function procesarAccion() {
+            let input = document.getElementById("daily-amount");
+            let monto = parseFloat(input.value);
+
+            if (isNaN(monto) || monto < 0) {
+                alert("Por favor ingresa un monto válido entre S/ 0.50 y S/ 5.00.");
+                return;
+            }
+
+            if (!estadoFeedbackMostrado) {
+                // PRIMER CLIC: Muestra la recomendación / felicitación personalizada
+                ahorrosPorNivel[nivelActualEnProceso] = monto;
+                
+                let feedbackBox = document.getElementById("feedback-box");
+                feedbackBox.classList.remove("hidden");
+                
+                let mensaje = "";
+                if (monto >= 3.00) {
+                    mensaje = `🎉 ¡Excelente nivel! Ahorrar S/ ${monto.toFixed(2)} demuestra una gran disciplina. ¡${personajeElegido} ha ganado mucha fuerza hoy gracias a tu esfuerzo!`;
+                } else if (monto >= 1.00) {
+                    mensaje = `👍 ¡Muy bien! S/ ${monto.toFixed(2)} es un paso firme hacia tu meta. ¡Constancia y paciencia son la clave del éxito financiero!`;
+                } else {
+                    mensaje = `💡 ¡Buen comienzo! Aunque S/ ${monto.toFixed(2)} es poco, recuerda que el hábito importa más que el monto. ¡Mañana puedes subir al siguiente nivel!`;
+                }
+                
+                feedbackBox.innerHTML = mensaje;
+                input.disabled = true;
+                estadoFeedbackMostrado = true;
+                document.getElementById("action-btn").innerText = "Regresar al Mapa de Niveles";
+            } else {
+                // SEGUNDO CLIC: Regresa al mapa de niveles
+                document.getElementById("screen-game").classList.add("hidden");
+                document.getElementById("screen-levels").classList.remove("hidden");
+                construirMapaNiveles();
+                actualizarTotalMapa();
+            }
+        }
+
+        function reiniciarJuego() {
+            ahorrosPorNivel = {};
+            nivelActualEnProceso = 1;
+            document.getElementById("screen-end").classList.add("hidden");
+            document.getElementById("screen-intro").classList.remove("hidden");
+        }
+    </script>
+
+</body>
+</html>
